@@ -9,6 +9,9 @@ import 'materialize-css/dist/css/materialize.min.css';
 
 //Componentes
 import Login from './components/login';
+import Dashboard from './components/dashboard';
+import NotFound from './components/not-found';
+import PanelVendedor from './components/panel-vendedor';
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
@@ -30,6 +33,9 @@ class Main extends React.Component{
         return (
             <Router>
                 <Route path="/" exact component={Login} />
+                <Route path="/dashboard" component={Dashboard} />
+                <Route path="/panel-vendedor" component={PanelVendedor} />
+                <Route path="/not-found" component={NotFound} />
             </Router>
         );
     }

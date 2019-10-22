@@ -2,12 +2,12 @@ import React, { Component } from 'react';
 import firebase from "../firebase/config";
 import Menu from './menu';
 
-export default class Dashboard extends Component{
+export default class PanelVendedor extends Component{
 	constructor(props){
 		super(props);
 		this.state = {
 			user: null,
-			allowed: ["admin@frida.mx", "ctellezesp.develop@gmail.com", "ctellezesp@gmail.com", "tellezalberto990@gmail.com"]
+			allowed: ["admin@frida.mx", "ctellezesp.develop@gmail.com", "ctellezesp@gmail.com", "tellezalberto990@gmail.com", "empleado@frida.mx"]
 		}
 	}
 
@@ -28,7 +28,7 @@ export default class Dashboard extends Component{
 		return(
 			<div className="row">
 				<Menu />
-				<h4>Dashboard</h4>
+				<h4>Panel Vendedor</h4>
 				<h5>{this.state.user}</h5>
 			</div>
 		)
