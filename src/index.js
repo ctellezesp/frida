@@ -4,14 +4,18 @@ import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
-import 'materialize-css'; // It installs the JS asset only
-import 'materialize-css/dist/css/materialize.min.css';
 
 //Componentes
 import Login from './components/login';
 import Dashboard from './components/dashboard';
 import NotFound from './components/not-found';
 import PanelVendedor from './components/panel-vendedor';
+import CrearUsuario from './components/usuarios/crear-usuario';
+import EditarUsuario from './components/usuarios/editar-usuario';
+import ListaUsuarios from './components/usuarios/lista-usuarios';
+import RegistrarProductos from './components/productos/registrar-producto';
+import ListaProductos from './components/productos/lista-productos';
+import EditarProducto from './components/productos/editar-producto';
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
@@ -35,6 +39,12 @@ class Main extends React.Component{
                 <Route path="/" exact component={Login} />
                 <Route path="/dashboard" component={Dashboard} />
                 <Route path="/panel-vendedor" component={PanelVendedor} />
+                <Route path="/crear-usuario" component={CrearUsuario} />
+                <Route path="/editar-usuario/:id" component={EditarUsuario} />
+                <Route path="/lista-usuarios" component={ListaUsuarios} />
+                <Route path="/registrar-productos" component={RegistrarProductos} />
+                <Route path="/lista-productos" component={ListaProductos} />
+                <Route path="/editar-producto/:id" component={EditarProducto} />
                 <Route path="/not-found" component={NotFound} />
             </Router>
         );
