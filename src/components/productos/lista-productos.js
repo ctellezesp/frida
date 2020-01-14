@@ -84,7 +84,7 @@ export default class ListaProductos extends Component {
                         style={{margin: 20}}
                         startIcon={<AddIcon />}
                         disabled={this.state.christmas}
-                        onClick={() => this.props.history.push('/registrar-producto')}
+                        onClick={() => this.props.history.push('/registrar-productos')}
                     >
                         Registrar Producto
                     </Button>

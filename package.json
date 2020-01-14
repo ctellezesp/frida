@@ -12,6 +12,7 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.2.0",
     "react-select": "^3.0.8",
+    "react-tabs": "^3.1.0",
     "sweetalert": "^2.1.2"
   },
   "scripts": {

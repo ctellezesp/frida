@@ -114,15 +114,15 @@ export default class EditarProductos extends Component{
         } else {
             let toSave = {
                 nombre: this.state.nombre,
-                categoria: this.state.categoria.value,
+                categoria: (typeof this.state.categoria == "string") ? this.state.categoria : this.state.categoria.value,
                 descripcion: this.state.descripcion,
                 precio: this.state.precio
             }
-            firebase.db.collection("productos").add(toSave)
+            firebase.db.collection("productos").doc(this.state.id).set(toSave, {merge: true})
             .then(() => {
-                swal("Producto agregado", `${this.state.nombre} ha sido agregado correctamente`, "succcess")
+                swal("Producto Actualizado", `${this.state.nombre} ha sido actualizado correctamente`, "success")
                 .then(() => {
-                    this.props.history.push("lista-productos");
+                    this.props.history.push("/lista-productos");
                 })
             })
             .catch(err => {
@@ -197,6 +197,7 @@ export default class EditarProductos extends Component{
                             onCreateOption={this.handleCreate}
                             options={this.state.categorias}
                             value={this.state.categoria}
+                            placeholder={this.state.categoria}
                         />
                     </Grid>
                 </Grid>

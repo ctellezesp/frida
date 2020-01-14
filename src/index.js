@@ -16,6 +16,8 @@ import ListaUsuarios from './components/usuarios/lista-usuarios';
 import RegistrarProductos from './components/productos/registrar-producto';
 import ListaProductos from './components/productos/lista-productos';
 import EditarProducto from './components/productos/editar-producto';
+import RegistrarVenta from './components/ventas/registrar-venta';
+import RegistrarGasto from './components/gastos/registrar-gasto';
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
@@ -45,6 +47,8 @@ class Main extends React.Component{
                 <Route path="/registrar-productos" component={RegistrarProductos} />
                 <Route path="/lista-productos" component={ListaProductos} />
                 <Route path="/editar-producto/:id" component={EditarProducto} />
+                <Route path="/registrar-venta" component={RegistrarVenta} />
+                <Route path="/registrar-gasto" component={RegistrarGasto} />
                 <Route path="/not-found" component={NotFound} />
             </Router>
         );
