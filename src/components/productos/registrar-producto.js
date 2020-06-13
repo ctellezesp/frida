@@ -14,11 +14,18 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 import InputAdornment from '@material-ui/core/InputAdornment';
+import IconButton from '@material-ui/core/IconButton';
+import PhotoCamera from '@material-ui/icons/PhotoCamera';
+import ImageUploader from 'react-images-upload';
+import ReactCrop from 'react-image-crop';
+import 'react-image-crop/dist/ReactCrop.css';
+
 
 const createOption = (label) => ({
     label,
     value: label.toLowerCase().replace(/\W/g, ''),
   });
+
 
 export default class RegistrarProductos extends Component{
     constructor(props){
@@ -29,7 +36,14 @@ export default class RegistrarProductos extends Component{
             categoria: undefined,
             descripcion: '',
             precio: '',
-            isLoading: false
+            isLoading: false,
+            src: null,
+            crop: {
+                unit: '%',
+                width: 30,
+                aspect: 4 / 3,
+            },
+            croppedImageUrl: null
         }
         this.myNombre = this.myNombre.bind(this);
         this.myCategoria = this.myCategoria.bind(this);
@@ -94,10 +108,95 @@ export default class RegistrarProductos extends Component{
         })
     }
 
+    onSelectFile = e => {
+        if (e.target.files && e.target.files.length > 0) {
+          const reader = new FileReader();
+          reader.addEventListener('load', () =>
+            this.setState({ src: reader.result })
+          );
+          reader.readAsDataURL(e.target.files[0]);
+        }
+      };
+    
+      // If you setState the crop in here you should return false.
+      onImageLoaded = image => {
+        this.imageRef = image;
+      };
+    
+      onCropComplete = crop => {
+        this.makeClientCrop(crop);
+      };
+    
+      onCropChange = (crop, percentCrop) => {
+        // You could also use percentCrop:
+        // this.setState({ crop: percentCrop });
+        this.setState({ crop });
+      };
+    
+      async makeClientCrop(crop) {
+        if (this.imageRef && crop.width && crop.height) {
+          const croppedImageUrl = await this.getCroppedImg(
+            this.imageRef,
+            crop,
+            'newFile.jpeg'
+          );
+          this.setState({ croppedImageUrl });
+          console.log(croppedImageUrl);
+        }
+      }
+    
+      getCroppedImg(image, crop, fileName) {
+        const canvas = document.createElement('canvas');
+        const scaleX = image.naturalWidth / image.width;
+        const scaleY = image.naturalHeight / image.height;
+        canvas.width = crop.width;
+        canvas.height = crop.height;
+        const ctx = canvas.getContext('2d');
+    
+        ctx.drawImage(
+          image,
+          crop.x * scaleX,
+          crop.y * scaleY,
+          crop.width * scaleX,
+          crop.height * scaleY,
+          0,
+          0,
+          crop.width,
+          crop.height
+        );
+    
+        return new Promise((resolve, reject) => {
+          console.log("Convert to blob...");
+          console.log(canvas);
+          canvas.toBlob(blob => {
+            if (!blob) {
+              //reject(new Error('Canvas is empty'));
+              console.error('Canvas is empty');
+              return;
+            }
+            blob.name = fileName;
+            window.URL.revokeObjectURL(this.fileUrl);
+            this.fileUrl = window.URL.createObjectURL(blob);
+            resolve(this.fileUrl);
+          }, 'image/jpeg');
+        });
+    }
+
     save() {
         if(this.state.nombre === "" || this.state.categoria === "" || this.state.precio === "") {
             swal("Datos no validos", "Ningún dato puede estar vacio", "error");
         } else {
+            console.log(this.state);
+            firebase.storage.ref().child(`carta/${this.state.name}`).put(this.state.croppedImageUrl)
+            .then(res => {
+                console.log("uploading");
+                console.log(res);
+            })
+            .catch(err => {
+                console.log("Error");
+                console.log(err);
+            });
+            debugger;
             let toSave = {
                 nombre: this.state.nombre,
                 categoria: (typeof this.state.categoria == "string") ? this.state.categoria : this.state.categoria.value,
@@ -118,6 +217,8 @@ export default class RegistrarProductos extends Component{
         }
     }
 
+    
+
     render() {
         return(
             <div className="main">
@@ -130,6 +231,34 @@ export default class RegistrarProductos extends Component{
                         Por favor introduce los datos siguientes:
                     </Typography>
                 </Grid>
+                <Paper>
+                    <Grid container direction="row" justify="center" alignItems="center">
+                        <Grid item xs={12} lg={8}>
+                            <input accept="image/*" className="no-show" id="icon-button-file" type="file" onChange={this.onSelectFile} />
+                            <label htmlFor="icon-button-file">
+                                <IconButton color="primary" aria-label="upload picture" component="span">
+                                    <PhotoCamera />
+                                </IconButton>
+                            </label>
+                            {this.state.src && (
+                                <ReactCrop
+                                    src={this.state.src}
+                                    crop={this.state.crop}
+                                    ruleOfThirds
+                                    onImageLoaded={this.onImageLoaded}
+                                    onComplete={this.onCropComplete}
+                                    onChange={this.onCropChange}
+                                />
+                            )}
+                        </Grid>
+                        <Grid item xs={12} lg={4}>
+                            {this.state.croppedImageUrl && (
+                                <img alt="Crop" style={{ maxWidth: '100%' }} src={this.state.croppedImageUrl} />
+                            )}
+                        </Grid>
+                    </Grid>
+                    
+                </Paper>
                 <Paper style={{margin: 20, background: '#eee', padding: 10}}>
                 <Grid container direction="row" justify="center" alignItems="center">
                     <Grid item xs={12} md={8} style={{paddingRight: 20, paddingLeft: 20}}>

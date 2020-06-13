@@ -82,11 +82,23 @@ export default class RegistrarVenta extends Component{
         if(this.state.productos[ind].cantidad === 1){
             swal("Invalido", "No puede haber 0 productos", "error");
         }
-        else this.state.productos[ind].cantidad -= 1;
+        else{
+            this.setState(prevState => ({
+                productos: prevState.productos.map(
+                    el => el.key === ind? { ...el, cantidad: el.key.cantidad-=1 }: el
+                  )
+            }))
+        }
+        console.log(this.state.productos(ind));
+        //else this.state.productos[ind].cantidad -= 1;
     }
 
     moreProduct(ind) {
-        this.state.productos[ind].cantidad += 1;
+        this.setState(prevState => ({
+            productos: prevState.productos.forEach(
+                el => el.key === ind? { ...el, cantidad: el.key.cantidad+=1 }: el
+              )
+        }))
     }
 
     save() {

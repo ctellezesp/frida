@@ -71,7 +71,7 @@ export default class Dashboard extends Component{
                         </Paper></Link>
                     </Grid>
                     <Grid item xs={12} md={6} lg={6}>
-                        <Link to="registrar-producto"><Paper style={{background: '#f5f5f5'}}>
+                        <Link to="registrar-productos"><Paper style={{background: '#f5f5f5'}}>
                             <Grid container direction="column" justify="center" alignItems="center">
                                 <Grid item xs={12}>
                                     <AddCircleIcon style={{ fontSize: 100 }}/>
