@@ -43,7 +43,8 @@ export default class RegistrarProductos extends Component{
                 width: 30,
                 aspect: 4 / 3,
             },
-            croppedImageUrl: null
+            croppedImageUrl: null,
+            imgCrop: ''
         }
         this.myNombre = this.myNombre.bind(this);
         this.myCategoria = this.myCategoria.bind(this);
@@ -179,7 +180,30 @@ export default class RegistrarProductos extends Component{
             this.fileUrl = window.URL.createObjectURL(blob);
             resolve(this.fileUrl);
           }, 'image/jpeg');
+          let img = canvas.toDataURL("image/png");
+          this.setState({
+              imgCrop: img
+          });
         });
+    }
+
+    uploadFile = async () => {
+        let data = {
+            "file": this.state.imgCrop,
+            "upload_preset": "ouf8b7zl",
+        }
+        const res = await fetch('https://api.cloudinary.com/v1_1/ddp3psjjj/image/upload', {
+          method: 'POST',
+          body: JSON.stringify(data),
+          headers: {
+            'content-type': 'application/json'
+          },
+        })
+        const file = await res.json();
+        console.log(file);
+        console.log(file.secure_url);
+        //setImage(file.secure_url)
+        //setLargeImage(file.eager[0].secure_url)
     }
 
     save() {
@@ -187,13 +211,39 @@ export default class RegistrarProductos extends Component{
             swal("Datos no validos", "Ningún dato puede estar vacio", "error");
         } else {
             console.log(this.state);
-            firebase.storage.ref().child(`carta/${this.state.name}`).put(this.state.croppedImageUrl)
+            let uploadTask = firebase.storage.ref().child(`images/${this.state.nombre}.png`).putString(this.state.imgCrop, 'data_url', {
+                contentType: 'image/jpeg',
+              });
+            // Register three observers:
+            // 1. 'state_changed' observer, called any time the state changes
+            // 2. Error observer, called on failure
+            // 3. Completion observer, called on successful completion
+            uploadTask.on('state_changed', function(snapshot){
+            // Observe state change events such as progress, pause, and resume
+            // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+            var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            console.log('Upload is ' + progress + '% done');
+            switch (snapshot.state) {
+                case firebase.storage.TaskState.PAUSED: // or 'paused'
+                console.log('Upload is paused');
+                break;
+                case firebase.storage.TaskState.RUNNING: // or 'running'
+                console.log('Upload is running');
+                break;
+            }
+            }, function(error) {
+                console.log(error);
+            }, function() {
+                uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+                console.log('File available at', downloadURL);
+                });
+            });
+            firebase.storage.ref().child(`carta/${this.state.name}`).putString(this.state.imgCrop, 'base64', {contentType: 'image/png'})
             .then(res => {
-                console.log("uploading");
                 console.log(res);
+                console.log('Uploaded a base64url string!');
             })
             .catch(err => {
-                console.log("Error");
                 console.log(err);
             });
             debugger;
@@ -213,7 +263,7 @@ export default class RegistrarProductos extends Component{
             .catch(err => {
                 console.log(err);
                 swal("Error", "Por favor, intentalo otra vez", "error");
-            })
+            });
         }
     }
 

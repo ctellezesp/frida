@@ -5,6 +5,7 @@ import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 
+
 //Componentes
 import Login from './components/login';
 import Dashboard from './components/dashboard';
@@ -18,6 +19,11 @@ import ListaProductos from './components/productos/lista-productos';
 import EditarProducto from './components/productos/editar-producto';
 import RegistrarVenta from './components/ventas/registrar-venta';
 import RegistrarGasto from './components/gastos/registrar-gasto';
+import Carta from './components/carta';
+import Cropper from './components/cropper';
+
+import { pdfjs } from 'react-pdf';
+pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`;
 
 ReactDOM.render(<App />, document.getElementById('root'));
 
@@ -49,6 +55,8 @@ class Main extends React.Component{
                 <Route path="/editar-producto/:id" component={EditarProducto} />
                 <Route path="/registrar-venta" component={RegistrarVenta} />
                 <Route path="/registrar-gasto" component={RegistrarGasto} />
+                <Route path="/carta" component={Carta} />
+                <Route path="/cropper" component={Cropper} />
                 <Route path="/not-found" component={NotFound} />
             </Router>
         );

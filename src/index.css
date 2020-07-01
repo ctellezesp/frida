@@ -14,3 +14,14 @@ a {
 .no-show{
   display: none;
 }
+
+.center-bottons{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  margin: 10px 0;
+}
+
+.btn-margin{
+  margin: 0 10px !important;
+}
