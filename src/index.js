@@ -33,7 +33,7 @@ ReactDOM.render(<App />, document.getElementById('root'));
 serviceWorker.unregister();
 
 
-class Main extends React.Component{
+class Main extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -44,7 +44,7 @@ class Main extends React.Component{
     render() {
         return (
             <Router>
-                <Route path="/" exact component={Login} />
+                <Route path="/" exact component={Carta} />
                 <Route path="/dashboard" component={Dashboard} />
                 <Route path="/panel-vendedor" component={PanelVendedor} />
                 <Route path="/crear-usuario" component={CrearUsuario} />

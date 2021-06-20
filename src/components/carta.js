@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import {Document, Page } from 'react-pdf';
+import { Document, Page } from 'react-pdf';
 import Grid from '@material-ui/core/Grid';
 import ArrowLeftIcon from '@material-ui/icons/ArrowLeft';
 import ArrowRightIcon from '@material-ui/icons/ArrowRight';
@@ -8,21 +8,8 @@ import swal from 'sweetalert';
 
 export default class App extends Component {
 
-  componentDidMount(){
-    console.log(document.cookie);
-    if(document.cookie == ""){
-      document.cookie = "visit=1;"
-    }
-    else {
-      console.log(document.cookie[6]);
-      let current = Number(document.cookie[6]);
-      if(current == 5){
-        swal("Felicidades", "Has ganado un cupon", "success");
-      }
-      let newVisit = current+1;
-      document.cookie = `visit=${newVisit}`;
-    }
-    
+  componentDidMount() {
+
   }
   state = { numPages: null, pageNumber: 1, pdf: null };
 
@@ -32,7 +19,7 @@ export default class App extends Component {
 
   onSelectFile = (e) => {
     this.setState({
-        pdf: e.target.files[0]
+      pdf: e.target.files[0]
     });
   }
 
@@ -47,41 +34,41 @@ export default class App extends Component {
     return (
       <div className="main">
         <Grid container direction="row">
-            <Grid item xs={12}>
-                <nav className="center-bottons">
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        startIcon={<ArrowLeftIcon />}
-                        onClick={this.goToPrevPage}
-                        className="btn-margin"
-                        disabled={this.state.pageNumber == 1? true: false}
-                    >
-                        Previo
+          <Grid item xs={12}>
+            <nav className="center-bottons">
+              <Button
+                variant="contained"
+                color="primary"
+                startIcon={<ArrowLeftIcon />}
+                onClick={this.goToPrevPage}
+                className="btn-margin"
+                disabled={this.state.pageNumber == 1 ? true : false}
+              >
+                Anterior
                     </Button>
-                    <Button
-                      variant="contained"
-                      color="primary"
-                      endIcon={<ArrowRightIcon />}
-                      onClick={this.goToNextPage}
-                      className="btn-margin"
-                      disabled={this.state.pageNumber < numPages? false: true}
-                    >
-                        Siguiente
+              <Button
+                variant="contained"
+                color="primary"
+                endIcon={<ArrowRightIcon />}
+                onClick={this.goToNextPage}
+                className="btn-margin"
+                disabled={this.state.pageNumber < numPages ? false : true}
+              >
+                Siguiente
                     </Button>
-                </nav>
-                <div style={{ width: window.innerWidth }}>
-                    <Document
-                      file={process.env.PUBLIC_URL + 'carta-desayunos.pdf'}
-                      onLoadSuccess={this.onDocumentLoadSuccess}
-                    >
-                    <Page pageNumber={pageNumber} width={window.innerWidth} onScroll={this.goToNextPage}/>
-                    </Document>
-                </div>
-                <p>
-                    Pagina {pageNumber} de {numPages}
-                </p>
-            </Grid>
+            </nav>
+            <div style={{ width: window.innerWidth }}>
+              <Document
+                file={process.env.PUBLIC_URL + 'frida-2021-junio.pdf'}
+                onLoadSuccess={this.onDocumentLoadSuccess}
+              >
+                <Page pageNumber={pageNumber} width={window.innerWidth} onScroll={this.goToNextPage} />
+              </Document>
+            </div>
+            <p>
+              Pagina {pageNumber} de {numPages}
+            </p>
+          </Grid>
         </Grid>
       </div>
     );
